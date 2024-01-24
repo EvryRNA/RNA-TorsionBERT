@@ -9,8 +9,8 @@
 
 It provides an improvement of MAE of 6.2° over the previous state-of-the-art model, SPOT-RNA-1D, on the Test Set (composed of RNA-Puzzles and CASP-RNA).
 
-| Model  | $\alpha$ | beta  | gamma | delta | epsilon | zeta  | chi   | eta | theta | 
-|------------------|----------|-------|-------|-------|---------|-------|-------|-------|-------| 
+| Model  | $\alpha$ | $\beta$  | $\gamma$  | $\delta$  | $\epsilon$  | $\zeta$  | $\chi$  | $\eta$  | $\theta$  | 
+|------------------|----------|------|------|------|------|------|------|------|------| 
 | **RNA-TorsionBERT**  | 37.3     | 19.6 | 29.4 | 13.6 | 16.6 | 26.6 | 14.7 | 20.1 | 25.4 | 
-| SPOT-RNA-1D        | 45.7     | 23 | 33.6 | 19 | 21.1 | 34.4 | 19.3 | 28.9 | 33.9 | 
+| SPOT-RNA-1D        | 45.7     | 23   | 33.6 | 19   | 21.1 | 34.4 | 19.3 | 28.9 | 33.9 | 
 
