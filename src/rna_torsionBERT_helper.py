@@ -97,7 +97,6 @@ class RNATorsionBERTHelper:
         )
         output_angles = {}
         for angle_index, angle in enumerate(ANGLES_ORDER):
-            output_angles[angle] = np.round(
-                output[index_start + 1 : index_end, angle_index], 2
-            ).tolist()
+            angles = output[index_start + 1 : index_end, angle_index].tolist()
+            output_angles[angle] = [round(angle, 2) for angle in angles]
         return output_angles
