@@ -14,3 +14,10 @@ It provides an improvement of MAE of 6.2° over the previous state-of-the-art mo
 | **RNA-TorsionBERT**  | 37.3     | 19.6 | 29.4 | 13.6 | 16.6 | 26.6 | 14.7 | 20.1 | 25.4 | 
 | SPOT-RNA-1D        | 45.7     | 23   | 33.6 | 19   | 21.1 | 34.4 | 19.3 | 28.9 | 33.9 | 
 
+## Installation
+
+To install RNA-TorsionBERT and it's dependencies following commands can be used in terminal:
+
+```bash
+
+```
