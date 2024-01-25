@@ -40,6 +40,8 @@ class RNATorsionBERTCLI:
         if self.out_path is not None:
             save_json(output, self.out_path)
             logger.info(f"Saved the output to {self.out_path}")
+        for angle, value in output.items():
+            logger.info(f"{angle} : {value}")
         return output
 
     @staticmethod
