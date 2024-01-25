@@ -2,7 +2,7 @@ import json
 from typing import Dict
 
 
-def read_fasta(in_path: str)-> str:
+def read_fasta(in_path: str) -> str:
     """
     Read a fasta file to get the sequence
     :param in_path: path to a .fasta file
@@ -12,6 +12,7 @@ def read_fasta(in_path: str)-> str:
         lines = f.readlines()
     sequence = "".join([line.strip() for line in lines[1:]])
     return sequence
+
 
 def save_json(content: Dict, path: str):
     """Save the dictionary into a json file.
@@ -26,4 +27,3 @@ def save_json(content: Dict, path: str):
         path_to_save = path + ".json"
     with open(path_to_save, "w") as file:
         json.dump(content, file)
-
