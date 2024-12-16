@@ -1,3 +1,4 @@
+biopython==1.84
 CacheControl==0.12.11
 certifi==2023.11.17
 charset-normalizer==3.3.2
@@ -13,14 +14,19 @@ msgpack==1.0.4
 networkx==3.2.1
 numpy==1.26.3
 packaging==23.2
+pandas==2.2.3
+python-dateutil==2.9.0.post0
+pytz==2024.2
 PyYAML==6.0.1
 regex==2023.12.25
 requests==2.31.0
 safetensors==0.4.2
+six==1.17.0
 sympy==1.12
 tokenizers==0.15.1
 torch==2.1.2
 tqdm==4.66.1
 transformers==4.37.1
 typing_extensions==4.9.0
+tzdata==2024.2
 urllib3==2.1.0

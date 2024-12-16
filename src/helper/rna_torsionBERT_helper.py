@@ -1,12 +1,16 @@
 import transformers
 from transformers import AutoModel, AutoTokenizer
 import numpy as np
+import pandas as pd
 from typing import Optional, Dict
+import os
+
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 transformers.logging.set_verbosity_error()
 
 
-ANGLES_ORDER = [
+BACKBONE = [
     "alpha",
     "beta",
     "gamma",
@@ -16,13 +20,21 @@ ANGLES_ORDER = [
     "chi",
     "eta",
     "theta",
+    "eta'",
+    "theta'",
+    "v0",
+    "v1",
+    "v2",
+    "v3",
+    "v4",
 ]
 
 
 class RNATorsionBERTHelper:
     def __init__(self):
+        self.model_name = "sayby/rna_torsionbert"
         self.tokenizer = AutoTokenizer.from_pretrained(
-            "sayby/rna_torsionbert", trust_remote_code=True
+            self.model_name, trust_remote_code=True
         )
         self.params_tokenizer = {
             "return_tensors": "pt",
@@ -30,9 +42,7 @@ class RNATorsionBERTHelper:
             "max_length": 512,
             "truncation": True,
         }
-        self.model = AutoModel.from_pretrained(
-            "sayby/rna_torsionbert", trust_remote_code=True
-        )
+        self.model = AutoModel.from_pretrained(self.model_name, trust_remote_code=True)
 
     def predict(self, sequence: str):
         sequence_tok = self.convert_raw_sequence_to_k_mers(sequence)
@@ -44,6 +54,7 @@ class RNATorsionBERTHelper:
         output_angles = self.convert_logits_to_dict(
             outputs[0, :], inputs["input_ids"][0, :].cpu().detach().numpy()
         )
+        output_angles.index = list(sequence)[:-2]  # Because of the 3-mer representation
         return output_angles
 
     def convert_raw_sequence_to_k_mers(self, sequence: str, k_mers: int = 3):
@@ -53,7 +64,11 @@ class RNATorsionBERTHelper:
         :return: input readable by the tokenizer
         """
         sequence = sequence.upper().replace("U", "T")
-        k_mers_sequence = [sequence[i : i + k_mers] for i in range(len(sequence))]
+        k_mers_sequence = [
+            sequence[i : i + k_mers]
+            for i in range(len(sequence))
+            if len(sequence[i : i + k_mers]) == k_mers
+        ]
         return " ".join(k_mers_sequence)
 
     def convert_sin_cos_to_angles(
@@ -95,8 +110,10 @@ class RNATorsionBERTHelper:
             np.where(input_ids == 2)[0][0],
             np.where(input_ids == 3)[0][0],
         )
-        output_angles = {}
-        for angle_index, angle in enumerate(ANGLES_ORDER):
-            angles = output[index_start + 1 : index_end, angle_index].tolist()
-            output_angles[angle] = [round(angle, 2) for angle in angles]
-        return output_angles
+        output_non_pad = output[index_start + 1 : index_end, :]
+        output_angles = {
+            angle: output_non_pad[:, angle_index]
+            for angle_index, angle in enumerate(BACKBONE)
+        }
+        out = pd.DataFrame(output_angles)
+        return out

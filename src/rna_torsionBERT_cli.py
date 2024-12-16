@@ -1,8 +1,8 @@
 import argparse
 from typing import Optional
 
-from src.rna_torsionBERT_helper import RNATorsionBERTHelper
-from src.utils import read_fasta, save_json
+from src.helper.rna_torsionBERT_helper import RNATorsionBERTHelper
+from src.utils import read_fasta
 from loguru import logger
 
 
@@ -38,10 +38,8 @@ class RNATorsionBERTCLI:
     def run(self):
         output = RNATorsionBERTHelper().predict(self.sequence)
         if self.out_path is not None:
-            save_json(output, self.out_path)
+            output.to_csv(self.out_path)
             logger.info(f"Saved the output to {self.out_path}")
-        for angle, value in output.items():
-            logger.info(f"{angle} : {value}")
         return output
 
     @staticmethod
@@ -68,7 +66,7 @@ class RNATorsionBERTCLI:
             "--out_path",
             dest="out_path",
             type=str,
-            help="Path to a .json file to save the prediction",
+            help="Path to a .csv file to save the prediction",
             default=None,
         )
         # Parse the command line arguments

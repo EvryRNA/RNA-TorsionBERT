@@ -1,18 +1,14 @@
 # RNA-TorsionBERT
 
-`RNA-TorsionBERT` is a 331 MB parameter BERT-based language model that predicts RNA torsional and pseudo-torsional angles from the sequence.
+`RNA-TorsionBERT` is a 86.9 MB parameter BERT-based language model that predicts RNA torsional and pseudo-torsional angles from the sequence.
 
-![](./img/dnabert_architecture_final.drawio.png)
+![](./img/dnabert_architecture_final.png)
 
 
-`RNA-TorsionBERT` is a DNABERT model that was pre-trained on ~4200 RNA structures before being fine-tuned on 185 non-redundant structures from rsRNASP.
+`RNA-TorsionBERT` is a DNABERT model that was pre-trained on ~4200 RNA structures.
 
-It provides an improvement of MAE of 6.2° over the previous state-of-the-art model, SPOT-RNA-1D, on the Test Set (composed of RNA-Puzzles and CASP-RNA).
-
-| Model  | $\alpha$ | $\beta$  | $\gamma$  | $\delta$  | $\epsilon$  | $\zeta$  | $\chi$  | $\eta$  | $\theta$  | 
-|------------------|----------|------|------|------|------|------|------|------|------| 
-| **RNA-TorsionBERT**  | 37.3     | 19.6 | 29.4 | 13.6 | 16.6 | 26.6 | 14.7 | 20.1 | 25.4 | 
-| SPOT-RNA-1D        | 45.7     | 23   | 33.6 | 19   | 21.1 | 34.4 | 19.3 | 28.9 | 33.9 | 
+It provides improvement of [MCQ](https://github.com/tzok/mcq4structures) over the previous state-of-the-art models like 
+[SPOT-RNA-1D](https://github.com/jaswindersingh2/SPOT-RNA-1D) or inferred angles from existing methods, on the Test Set (composed of RNA-Puzzles and CASP-RNA).
 
 ## Installation
 
@@ -23,7 +19,7 @@ pip install -r requirements.txt
 ```
 
 
-## Usage
+## RNA-TorsionBERT usage
 
 To run the RNA-TorsionBERT, you can use the following command line:
 ```bash
@@ -33,10 +29,30 @@ python -m src.rna_torsionBERT_cli [--seq_file] [--in_fasta] [--out_path]
 The arguments are the following:
 - `--seq_file`: RNA Sequence. 
 - `--in_fasta`: Path to the input sequence fasta file. 
-- `--out_path`: Path to a `.json` file where the output will be saved. 
+- `--out_path`: Path to a `.csv` file where the output will be saved. 
 
 You can also import in your python code the class `RNATorsionBERTCLI` from `src.rna_torsionBERT_cli`. 
 
+
+## TB-MCQ
+
+TB-MCQ stands for TorsionBERT-MCQ, which is a scoring function to assess the quality of a predicted structure in torsional angle space.
+Given the inferred angles from the structures and the predicted angles from the model, TB-MCQ computes the quality of the predicted angles using 
+the [MCQ](https://github.com/tzok/mcq4structures) (mean of circular quantities) metric.
+
+![](./img/torsion_bert_mcq_T.png)
+
+To run the TB-MCQ scoring function, you can use the following command line:
+```bash
+python -m src.rna_torsion_cli [--in_pdb] [--out_path]
+```
+with:
+
+- `--in_pdb`: Path to the input PDB file.
+- `--out_path`: Path to a .csv file where the output will be saved.
+
+
+## Docker 
 To run the code using `Docker`, you can use the following command line:
 ```bash
 docker build -t rna_torsionbert .
@@ -50,4 +66,15 @@ To have example of commands, you can look at the `Makefile`.
 
 ## Citation
 
-TO BE COMPLETED
+```bibtex
+@article {rna_torsionbert,
+	author = {Bernard, Clement and Postic, Guillaume and Ghannay, Sahar and Tahi, Fariza},
+	title = {RNA-TorsionBERT: leveraging language models for RNA 3D torsion angles prediction},
+	elocation-id = {2024.06.06.597803},
+	year = {2024},
+	doi = {10.1101/2024.06.06.597803},
+	publisher = {Cold Spring Harbor Laboratory},
+	URL = {https://www.biorxiv.org/content/early/2024/07/05/2024.06.06.597803},
+	journal = {bioRxiv}
+}
+```
