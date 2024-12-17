@@ -67,14 +67,13 @@ To have example of commands, you can look at the `Makefile`.
 ## Citation
 
 ```bibtex
-@article {rna_torsionbert,
-	author = {Bernard, Clement and Postic, Guillaume and Ghannay, Sahar and Tahi, Fariza},
-	title = {RNA-TorsionBERT: leveraging language models for RNA 3D torsion angles prediction},
-	elocation-id = {2024.06.06.597803},
-	year = {2024},
-	doi = {10.1101/2024.06.06.597803},
-	publisher = {Cold Spring Harbor Laboratory},
-	URL = {https://www.biorxiv.org/content/early/2024/07/05/2024.06.06.597803},
-	journal = {bioRxiv}
+@article{rna_torsionbert,
+  title = {RNA-TorsionBERT: leveraging language models for RNA 3D torsion angles prediction},
+  author = {Bernard, Clement and Postic, Guillaume and Ghannay, Sahar and Tahi, Fariza},
+  journal = {bioRxiv},
+  year = {2024},
+  month = {June},
+  doi = {10.1101/2024.06.06.597803},
+  url = {https://doi.org/10.1101/2024.06.06.597803}
 }
 ```
