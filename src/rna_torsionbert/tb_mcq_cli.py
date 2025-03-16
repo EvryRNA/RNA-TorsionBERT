@@ -4,17 +4,20 @@ import os
 from loguru import logger
 import tqdm
 import pandas as pd
+import torch
 from typing import Optional, List
 
-from src.helper.extractor_helper import ExtractorHelper
-from src.helper.rna_torsionBERT_helper import RNATorsionBERTHelper
-from src.metrics.mcq import MCQ
+from rna_torsionbert.helper.extractor_helper import ExtractorHelper
+from rna_torsionbert.helper.rna_torsionBERT_helper import RNATorsionBERTHelper
+from rna_torsionbert.metrics.mcq import MCQ
 
 
 class TBMCQCLI:
-    def __init__(self, in_pdb: str, out_path: Optional[str], *args, **kwargs):
+    def __init__(self, in_pdb: str, out_path: Optional[str], device: Optional[str] = "cpu", *args, **kwargs):
         self.list_files = self._init_pdb(in_pdb)
         self.out_path = out_path
+        self.device = torch.device(device)
+        self.torsionBERT_helper = RNATorsionBERTHelper(self.device)
 
     def _init_pdb(self, in_pdb: Optional[str]) -> List:
         """
@@ -22,6 +25,8 @@ class TBMCQCLI:
         :param in_pdb: a path to either a .pdb file or a directory of .pdb files
         :return: a list of path to .pdb files
         """
+        if in_pdb is None:
+            return []
         if os.path.isdir(in_pdb):
             list_files = os.listdir(in_pdb)
             list_files = [os.path.join(in_pdb, file_) for file_ in list_files]
@@ -53,8 +58,7 @@ class TBMCQCLI:
         """
         experimental_angles = ExtractorHelper().extract_all(pred_path)
         sequence = "".join(experimental_angles["sequence"].values)
-        torsionBERT_helper = RNATorsionBERTHelper()
-        torsionBERT_output = torsionBERT_helper.predict(sequence)
+        torsionBERT_output = self.torsionBERT_helper.predict(sequence)
         mcq = MCQ().compute_mcq(experimental_angles, torsionBERT_output)
         return mcq
 
@@ -78,12 +82,21 @@ class TBMCQCLI:
             help="Path to a .csv file to save the predictions.",
             default=None,
         )
+        parser.add_argument(
+            "--device",
+            dest="device",
+            type=str,
+            help="Device to use for the prediction. Default is 'cpu'. Selection between 'cpu' and 'cuda'",
+        default="cpu",
+        )
         # Parse the command line arguments
         args = parser.parse_args()
         return args
 
-
-if __name__ == "__main__":
+def main():
     args = TBMCQCLI.get_args()
     tb_mcq_cli = TBMCQCLI(**vars(args))
     tb_mcq_cli.run()
+
+if __name__ == "__main__":
+    main()

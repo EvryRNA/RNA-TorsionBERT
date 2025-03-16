@@ -3,9 +3,9 @@ import numpy as np
 
 import pandas as pd
 
-from src.enums.atoms import ALL_ATOMS, ANGLES
-from src.helper.computation_helper import ComputationHelper
-from src.utils import read_all_atoms, get_sequence
+from rna_torsionbert.enums.atoms import ALL_ATOMS, ANGLES
+from rna_torsionbert.helper.computation_helper import ComputationHelper
+from rna_torsionbert.utils import read_all_atoms, get_sequence
 
 
 class ExtractorHelper:

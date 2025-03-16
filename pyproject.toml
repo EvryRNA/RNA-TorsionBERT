@@ -1,0 +1,26 @@
+[project]
+name = "rna-torsionbert"
+version = "0.1.2"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "clementbernardd", email = "clementbernardd@gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "biopython>=1.85",
+    "loguru>=0.7.3",
+    "numpy<2.0",
+    "pandas>=2.2.3",
+    "scipy>=1.15.2",
+    "torch<=2.0.1",
+    "transformers>=4.49.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+rna_torsionbert = "rna_torsionbert.rna_torsionBERT_cli:main"
+tb_mcq = "rna_torsionbert.tb_mcq_cli:main"

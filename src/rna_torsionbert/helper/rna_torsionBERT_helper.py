@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from typing import Optional, Dict
 import os
+import torch
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
@@ -31,7 +32,7 @@ BACKBONE = [
 
 
 class RNATorsionBERTHelper:
-    def __init__(self):
+    def __init__(self, device: str):
         self.model_name = "sayby/rna_torsionbert"
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.model_name, trust_remote_code=True
@@ -42,11 +43,12 @@ class RNATorsionBERTHelper:
             "max_length": 512,
             "truncation": True,
         }
-        self.model = AutoModel.from_pretrained(self.model_name, trust_remote_code=True)
+        self.device = device
+        self.model = AutoModel.from_pretrained(self.model_name, trust_remote_code=True).to(self.device)
 
     def predict(self, sequence: str):
         sequence_tok = self.convert_raw_sequence_to_k_mers(sequence)
-        inputs = self.tokenizer(sequence_tok, **self.params_tokenizer)
+        inputs = self.tokenizer(sequence_tok, **self.params_tokenizer).to(self.device)
         outputs = self.model(inputs)["logits"]
         outputs = self.convert_sin_cos_to_angles(
             outputs.cpu().detach().numpy(), inputs["input_ids"]
@@ -84,6 +86,8 @@ class RNATorsionBERTHelper:
         :return: a np.ndarray with the angles for the sequence
         """
         if input_ids is not None:
+            if isinstance(input_ids, torch.Tensor):
+                input_ids = input_ids.detach().cpu().numpy()
             output[
                 (input_ids == 0)
                 | (input_ids == 2)
@@ -117,3 +121,10 @@ class RNATorsionBERTHelper:
         }
         out = pd.DataFrame(output_angles)
         return out
+
+
+if __name__ == "__main__":
+    sequence = "AGGGCUUUAGUCUUUGGAG"
+    rna_torsionbert_helper = RNATorsionBERTHelper()
+    output_angles = rna_torsionbert_helper.predict(sequence)
+    print(output_angles)

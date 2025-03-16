@@ -1,9 +1,10 @@
 import argparse
 from typing import Optional
 
-from src.helper.rna_torsionBERT_helper import RNATorsionBERTHelper
-from src.utils import read_fasta
+from rna_torsionbert.helper.rna_torsionBERT_helper import RNATorsionBERTHelper
+from rna_torsionbert.utils import read_fasta
 from loguru import logger
+import torch
 
 
 class RNATorsionBERTCLI:
@@ -12,11 +13,13 @@ class RNATorsionBERTCLI:
         in_seq: Optional[str],
         in_fasta: Optional[str],
         out_path: Optional[str],
+        device: Optional[str] = "cpu",
         *args,
         **kwargs,
     ):
         self.sequence = self._init_inputs(in_seq, in_fasta)
         self.out_path = out_path
+        self.device = torch.device(device)
 
     def _init_inputs(self, in_seq: Optional[str], in_fasta: Optional[str]) -> str:
         """
@@ -36,7 +39,7 @@ class RNATorsionBERTCLI:
         return sequence
 
     def run(self):
-        output = RNATorsionBERTHelper().predict(self.sequence)
+        output = RNATorsionBERTHelper(self.device).predict(self.sequence)
         if self.out_path is not None:
             output.to_csv(self.out_path)
             logger.info(f"Saved the output to {self.out_path}")
@@ -69,12 +72,22 @@ class RNATorsionBERTCLI:
             help="Path to a .csv file to save the prediction",
             default=None,
         )
+        parser.add_argument(
+            "--device",
+            dest="device",
+            type=str,
+            help="Device to use for the prediction. Default is 'cpu'. Selection between 'cpu' and 'cuda'",
+            default="cpu",
+        )
         # Parse the command line arguments
         args = parser.parse_args()
         return args
 
-
-if __name__ == "__main__":
+def main():
     args = RNATorsionBERTCLI.get_args()
     rna_torsionBERT_cli = RNATorsionBERTCLI(**vars(args))
     rna_torsionBERT_cli.run()
+
+
+if __name__ == "__main__":
+    main()

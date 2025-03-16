@@ -1,8 +1,8 @@
 import numpy as np
 from typing import List
 
-from src.enums.atoms import ANGLES, ALL_ATOMS
-from src.utils import compute_torsion_angle
+from rna_torsionbert.enums.atoms import ANGLES, ALL_ATOMS
+from rna_torsionbert.utils import compute_torsion_angle
 
 
 class ComputationHelper:
