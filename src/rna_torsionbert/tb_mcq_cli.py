@@ -13,11 +13,12 @@ from rna_torsionbert.metrics.mcq import MCQ
 
 
 class TBMCQCLI:
-    def __init__(self, in_pdb: str, out_path: Optional[str], device: Optional[str] = "cpu", *args, **kwargs):
+    def __init__(self, in_pdb: str, out_path: Optional[str], device: Optional[str] = "cpu",
+                 model_path: Optional[str] = None,*args, **kwargs):
         self.list_files = self._init_pdb(in_pdb)
         self.out_path = out_path
         self.device = torch.device(device)
-        self.torsionBERT_helper = RNATorsionBERTHelper(self.device)
+        self.torsionBERT_helper = RNATorsionBERTHelper(self.device, model_path=model_path)
 
     def _init_pdb(self, in_pdb: Optional[str]) -> List:
         """

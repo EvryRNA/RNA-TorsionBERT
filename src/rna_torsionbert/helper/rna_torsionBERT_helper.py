@@ -32,10 +32,10 @@ BACKBONE = [
 
 
 class RNATorsionBERTHelper:
-    def __init__(self, device: str):
-        self.model_name = "sayby/rna_torsionbert"
+    def __init__(self, device: str, model_path: str = "sayby/rna_torsionbert"):
+        self.model_path = model_path
         self.tokenizer = AutoTokenizer.from_pretrained(
-            self.model_name, trust_remote_code=True
+            self.model_path, trust_remote_code=True
         )
         self.params_tokenizer = {
             "return_tensors": "pt",
@@ -44,7 +44,7 @@ class RNATorsionBERTHelper:
             "truncation": True,
         }
         self.device = device
-        self.model = AutoModel.from_pretrained(self.model_name, trust_remote_code=True).to(self.device)
+        self.model = AutoModel.from_pretrained(self.model_path, trust_remote_code=True).to(self.device)
 
     def predict(self, sequence: str):
         sequence_tok = self.convert_raw_sequence_to_k_mers(sequence)
